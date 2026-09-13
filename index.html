@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Practice 3</title>
+<style>
+:root{
+  --ink:#2b1f33; --ink-soft:#5c4f66; --paper:#f4f1f5; --card:#fff;
+  --rule:#ddd4e0; --plum:#6b2f5e; --plum-lite:#f2e6f0;
+  --sea:#14786b; --sea-lite:#e2f1ee;
+  --coral:#b23a48; --coral-lite:#fbeaec;
+  --gold:#a9761a; --gold-lite:#fbf1de;
+  --shadow:0 1px 2px rgba(43,31,51,.08), 0 8px 24px rgba(43,31,51,.07);
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+input{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.topbar{position:sticky;top:0;z-index:40;background:var(--plum);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 20px;box-shadow:0 2px 10px rgba(0,0,0,.18);flex-wrap:wrap}
+.brand{font-family:var(--serif);font-size:19px;white-space:nowrap}
+.brand span{color:#f0c8e4}
+.topbar .spacer{flex:1}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 13px;font-size:15px;white-space:nowrap}
+.chip b{font-variant-numeric:tabular-nums}
+.ghost{background:transparent;border:1px solid rgba(255,255,255,.32);color:#fff;border-radius:8px;padding:6px 12px;font-size:15px}
+.ghost:hover{background:rgba(255,255,255,.16)}
+
+.wrap{max-width:960px;margin:0 auto;padding:26px 20px 180px}
+.screen{display:none}.screen.on{display:block}
+
+.cover{background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-top:14px}
+.cover-head{background:linear-gradient(135deg,#2b1f33,#6b2f5e 120%);color:#fff;padding:38px 40px 34px}
+.cover-head .eyebrow{font-size:14px;letter-spacing:2.4px;text-transform:uppercase;color:#e4b7d8;margin:0 0 6px}
+.cover-head h1{font-family:var(--serif);font-size:38px;margin:0 0 10px;font-weight:normal;line-height:1.15}
+.cover-head p{margin:0;color:#dfd2e4;max-width:58ch}
+.cover-body{padding:30px 40px 36px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin-bottom:26px}
+.fact{padding:14px 16px;border-right:1px solid var(--rule)}
+.fact:last-child{border-right:0}
+.fact b{display:block;font-family:var(--serif);font-size:24px;line-height:1.1}
+.fact small{color:var(--ink-soft);font-size:14px}
+.cover-body h2{font-size:16px;margin:0 0 10px;color:var(--sea)}
+.cover-body ol{margin:0 0 24px;padding-left:22px;color:var(--ink-soft);max-width:68ch}
+.cover-body ol li{margin-bottom:7px}
+.namefield{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.namefield input{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:250px;background:#fff}
+
+.btn{background:var(--plum);color:#fff;border:0;border-radius:9px;padding:13px 26px;font-size:16px;font-weight:600;box-shadow:0 2px 0 #4c2143}
+.btn:hover{background:#5d2851}
+.btn:active{transform:translateY(1px);box-shadow:0 1px 0 #4c2143}
+.btn.alt{background:#fff;color:var(--plum);border:1.5px solid var(--plum);box-shadow:none}
+.btn.alt:hover{background:var(--plum-lite)}
+.btn.sea{background:var(--sea);box-shadow:0 2px 0 #0e584e}
+.btn.sea:hover{background:#116458}
+.btn.grey{background:#fff;color:var(--ink-soft);border:1.5px solid var(--rule);box-shadow:none}
+.btn.small{padding:9px 17px;font-size:15px}
+.btn:disabled{opacity:.5;cursor:default}
+
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab{background:#fff;border:1px solid var(--rule);border-bottom:3px solid transparent;border-radius:8px 8px 0 0;padding:10px 20px;color:var(--ink-soft);font-size:16px}
+.tab.on{border-bottom-color:var(--sea);color:var(--ink);font-weight:600}
+.tab .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--rule);margin-right:8px;vertical-align:1px}
+.tab.done .dot{background:var(--sea)}
+
+.paper{background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:30px 36px 34px}
+.part-head{display:flex;align-items:center;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.part-badge{background:var(--plum);color:#fff;border-radius:6px;padding:5px 14px;font-size:15px;font-weight:600;letter-spacing:.5px}
+.part-head .qrange{background:var(--sea);color:#fff;border-radius:6px;padding:5px 14px;font-size:15px;font-weight:600}
+.part-head .scorepill{margin-left:auto;font-size:15px;background:var(--sea-lite);color:var(--sea);border-radius:999px;padding:5px 15px;display:none}
+.part-head .scorepill.on{display:inline-block}
+.task-intro{font-size:16.5px;color:var(--ink-soft);margin:0 0 18px;max-width:78ch;border-bottom:1px solid var(--rule);padding-bottom:14px}
+.ar{display:none;direction:rtl;text-align:right;font-size:16px;color:var(--plum);background:var(--plum-lite);border-radius:8px;padding:9px 14px;margin:0 0 16px}
+body.show-ar .ar{display:block}
+
+/* teaching */
+.teach{background:var(--sea-lite);border:1px solid #b9ddd5;border-radius:11px;padding:20px 24px;margin-bottom:26px}
+.teach h3{margin:0 0 10px;font-size:17px;color:var(--sea);font-family:var(--serif);font-weight:normal}
+.teach p{margin:0 0 12px;font-size:16px;max-width:72ch}
+.trapgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.trap{background:#fff;border-radius:9px;padding:11px 14px;font-size:15.5px}
+.trap b{display:block;color:var(--plum);font-size:14px;margin-bottom:2px}
+.trap i{font-style:normal;color:var(--coral);text-decoration:line-through;margin-right:6px}
+.trap em{font-style:normal;color:var(--sea);font-weight:600}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.cat{background:#fff;border:1px solid #b9ddd5;border-radius:999px;padding:5px 13px;font-size:14.5px}
+
+/* spelling items */
+.spell{border:1px solid var(--rule);border-radius:11px;padding:16px 20px;margin-bottom:12px;background:#fff}
+.spell.right{border-color:var(--sea);background:var(--sea-lite)}
+.spell.wrong{border-color:var(--coral)}
+.spell .head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.spell .num{background:var(--sea);color:#fff;border-radius:6px;min-width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.spell .tag{font-size:13px;background:var(--plum-lite);color:var(--plum);border-radius:999px;padding:3px 11px}
+.spell .sentence{font-family:var(--serif);font-size:18px;line-height:1.9;margin:0 0 12px}
+.spell .blank{display:inline-block;min-width:150px;border-bottom:2px dotted var(--ink-soft);text-align:center}
+.spell .hidden-sentence{display:none}
+.spell.revealed .hidden-sentence{display:block}
+.abtn{border:1.5px solid var(--sea);background:#fff;color:var(--sea);border-radius:8px;padding:8px 15px;font-size:15px;font-weight:600}
+.abtn:hover{background:var(--sea-lite)}
+.abtn.playing{background:var(--sea);color:#fff}
+.abtn.quiet{border-color:var(--rule);color:var(--ink-soft);font-weight:400}
+.typerow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.typerow input{border:1.5px solid var(--rule);border-radius:8px;padding:10px 13px;min-width:230px;font-size:16px}
+.typerow input:focus{border-color:var(--sea)}
+.typerow input:disabled{background:#fafafa}
+.letters{margin-top:11px;font-family:"Courier New",monospace;font-size:20px;letter-spacing:3px}
+.letters span{padding:1px 2px;border-radius:3px}
+.letters .g{color:var(--sea)}
+.letters .b{background:var(--coral-lite);color:var(--coral);text-decoration:line-through}
+.letters .m{background:var(--gold-lite);color:var(--gold)}
+.correctword{margin-top:8px;font-size:16px}
+.correctword b{color:var(--sea);font-size:19px;letter-spacing:1px}
+
+/* audio parts */
+.reel{border:1px solid var(--rule);border-radius:11px;background:#fbf9fc;padding:15px 18px;margin-bottom:24px}
+.reel-label{font-size:15px;color:var(--ink-soft)}
+.reel-label b{display:block;color:var(--ink);font-size:16px}
+.reel audio{width:100%;margin-top:12px;height:40px}
+.reel .warn{display:none;margin-top:10px;font-size:14px;color:var(--coral)}
+.reel.broken .warn{display:block}
+
+.qblock{margin-bottom:26px}
+.qstem{display:flex;gap:12px;align-items:baseline;margin-bottom:10px}
+.qstem .num{background:var(--sea);color:#fff;border-radius:6px;min-width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex:none}
+.qstem .txt{font-size:18px;font-weight:600}
+.opts{display:flex;flex-direction:column;gap:8px;max-width:640px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--rule);border-radius:9px;padding:11px 15px;background:#fff;font-size:17px;text-align:left}
+.opt:hover{border-color:var(--plum);background:#fbf8fb}
+.opt.sel{border-color:var(--plum);background:var(--plum-lite)}
+.opt.ok{border-color:var(--sea);background:var(--sea-lite)}
+.opt.no{border-color:var(--coral);background:var(--coral-lite)}
+.opt .lt{font-weight:700;color:var(--plum);min-width:20px}
+.why{margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--gold-lite);border:1px solid #e6d29a;font-size:15px;display:none;max-width:660px}
+.why.on{display:block}
+.why b{color:#7a5b05}
+.nokey{font-size:14px;color:var(--gold);margin-top:8px;display:none}
+.nokey.on{display:block}
+
+.markbar{border-top:1px solid var(--rule);margin-top:26px;padding-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.markbar .out{font-size:16px;color:var(--ink-soft)}
+.markbar .out b{font-family:var(--serif);font-size:21px;color:var(--plum)}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(255,255,255,.97);border-top:1px solid var(--rule);box-shadow:0 -4px 18px rgba(43,31,51,.08);padding:10px 20px 12px}
+.dock-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.marks{display:flex;gap:10px;flex:1;flex-wrap:wrap}
+.mgroup{display:flex;gap:3px;align-items:center}
+.mgroup > span{font-size:12px;color:var(--ink-soft);margin-right:4px}
+.mk{width:26px;height:26px;border-radius:6px;border:1px solid var(--rule);background:#fff;font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums;padding:0}
+.mk.filled{background:var(--plum);border-color:var(--plum);color:#fff}
+.mk.here{outline:2px solid var(--gold);outline-offset:1px}
+.mk.ok{background:var(--sea);border-color:var(--sea);color:#fff}
+.mk.no{background:var(--coral);border-color:var(--coral);color:#fff}
+
+.result-hero{background:linear-gradient(135deg,#2b1f33,#6b2f5e 120%);color:#fff;border-radius:14px;padding:34px 40px;text-align:center;box-shadow:var(--shadow)}
+.big{font-family:var(--serif);font-size:72px;line-height:1;margin:6px 0}
+.result-hero p{margin:4px 0;color:#dfd2e4}
+.scorebits{display:flex;justify-content:center;gap:36px;margin-top:20px;flex-wrap:wrap}
+.scorebits div{font-size:14.5px;color:#dfd2e4}
+.scorebits b{display:block;font-family:var(--serif);font-size:27px;color:#fff}
+.secbars{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:24px 30px;margin-top:18px}
+.sb{display:flex;align-items:center;gap:14px;margin-bottom:12px;font-size:16px;flex-wrap:wrap}
+.sb .lbl{width:240px;color:var(--ink-soft)}
+.sb .track{flex:1;min-width:120px;height:13px;background:#ebe5ee;border-radius:7px;overflow:hidden}
+.sb .track i{display:block;height:100%;background:var(--plum);border-radius:7px}
+.sb .val{width:56px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.badge{background:var(--gold-lite);border:1px solid #e6d29a;border-radius:999px;padding:6px 15px;font-size:14.5px}
+
+.cert{background:#fff;border:2px solid var(--plum);border-radius:12px;padding:38px 44px 30px;margin-top:18px;text-align:center;
+  background-image:radial-gradient(circle at 10% 10%,var(--plum-lite) 0,transparent 40%),radial-gradient(circle at 90% 90%,var(--sea-lite) 0,transparent 40%)}
+.cert .frame{border:1px solid #cfbcca;border-radius:8px;padding:26px 22px 20px}
+.cert h3{font-family:var(--serif);font-size:30px;margin:0 0 2px;font-weight:normal;letter-spacing:.5px}
+.cert .sub{margin:0 0 18px;color:var(--ink-soft);font-size:14px;letter-spacing:1.6px;text-transform:uppercase}
+.cert .awarded{margin:0;color:var(--ink-soft);font-size:15px;font-style:italic}
+.cert .who{font-family:var(--serif);font-size:34px;color:var(--plum);border-bottom:1px solid var(--rule);display:inline-block;padding:4px 40px 6px;margin:8px 0 14px;min-width:260px}
+.cert .bandbox{display:inline-block;border:2px solid var(--plum);border-radius:12px;padding:10px 32px 12px;margin:8px 0 12px;background:#fff}
+.cert .bandlbl{display:block;font-size:12px;letter-spacing:2px;color:var(--plum);text-transform:uppercase}
+.cert .bandnum{display:block;font-family:var(--serif);font-size:50px;line-height:1;color:var(--ink)}
+.cert .cscore{margin:0;font-size:16px;color:var(--ink-soft)}
+.cert .cmsg{margin:14px auto 0;font-size:15.5px;max-width:46ch}
+.cert .sig{display:flex;justify-content:space-between;gap:24px;margin-top:28px;flex-wrap:wrap}
+.cert .sig div{flex:1;min-width:150px;border-top:1px solid var(--rule);padding-top:6px}
+.cert .sig span{display:block;font-family:var(--serif);font-size:16px}
+.cert .sig small{color:var(--ink-soft);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+
+.drawer{position:fixed;inset:0;z-index:60;background:rgba(43,31,51,.45);display:none}
+.drawer.on{display:block}
+.dpanel{position:absolute;right:0;top:0;bottom:0;width:min(560px,100%);background:#fff;overflow-y:auto;padding:24px 26px 60px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+.dpanel h3{font-family:var(--serif);font-size:23px;margin:0 0 4px;font-weight:normal}
+.dpanel .hint{color:var(--ink-soft);font-size:14px;margin:0 0 16px;max-width:52ch}
+.dsec{border-top:1px solid var(--rule);padding-top:16px;margin-top:18px}
+.dsec h4{margin:0 0 10px;font-size:15px;color:var(--sea)}
+.note{background:var(--gold-lite);border:1px solid #e6d29a;border-radius:8px;padding:12px 15px;font-size:14px;color:#6d4a05;margin-bottom:14px}
+.note b{color:#573c04}
+.keyrow{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-size:14.5px}
+.keyrow label{width:40px;color:var(--ink-soft);text-align:right;font-variant-numeric:tabular-nums}
+.keyrow .stem{flex:1;color:var(--ink-soft);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.keyrow select{border:1px solid var(--rule);border-radius:6px;padding:5px 8px;width:74px}
+.keyrow.needs select{border-color:var(--gold);background:var(--gold-lite)}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:80;display:none}
+.foot{text-align:center;color:var(--ink-soft);font-size:14px;padding:26px 0 6px}
+
+@media print{
+  .topbar,.dock,.tabs,.no-print,.markbar,.reel,.drawer{display:none!important}
+  body{background:#fff}.wrap{padding:0}
+  body.cert-only .result-hero,body.cert-only .secbars,body.cert-only .foot{display:none!important}
+  body.cert-only .cert{margin-top:0;page-break-inside:avoid}
+}
+@media (max-width:680px){
+  .wrap{padding:16px 12px 200px}
+  .paper{padding:20px 16px 26px}
+  .cover-head,.cover-body{padding-left:22px;padding-right:22px}
+  .cover-head h1{font-size:29px}
+  .big{font-size:56px}
+  .sb .lbl{width:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Listening <span>Practice 3</span></div>
+  <div class="spacer"></div>
+  <div class="chip" id="chipProgress" hidden>Answered <b id="ansCount">0</b>/34</div>
+  <button class="ghost" id="btnAr" title="Arabic instructions">ع</button>
+  <button class="ghost" id="btnSetup">Teacher setup</button>
+</div>
+
+<div class="wrap">
+
+<!-- ===== COVER ===== -->
+<section class="screen on" id="scrCover">
+  <div class="cover">
+    <div class="cover-head">
+      <p class="eyebrow">Listening · Practice 3</p>
+      <h1>Spelling, a news report, and a day in Brighton</h1>
+      <p>Three parts. The first trains the words examiners most often make you write down. The other two are real listening tasks — a radio report about a difficult neighbour, and a tour guide running through a day trip.</p>
+    </div>
+    <div class="cover-body">
+      <div class="facts">
+        <div class="fact"><b>34</b><small>questions</small></div>
+        <div class="fact"><b>16</b><small>spelling items</small></div>
+        <div class="fact"><b>2</b><small>recordings</small></div>
+        <div class="fact"><b>2×</b><small>each recording plays twice</small></div>
+      </div>
+      <h2>How to use it</h2>
+      <ol>
+        <li>Part 1 needs no recording from your teacher — your device reads each sentence aloud. Press play, listen, and write the missing word.</li>
+        <li>Spelling is marked strictly, letter by letter, because that is how the real test marks it.</li>
+        <li>Parts 2 and 3 use the recordings. Read the questions first, then press play.</li>
+        <li>Mark each part on its own, or answer everything and see the full picture.</li>
+      </ol>
+      <div class="namefield">
+        <input type="text" id="studentName" placeholder="Your name" autocomplete="off">
+        <button class="btn" id="btnStart">Start</button>
+        <button class="btn alt" id="btnResume">Load saved answers</button>
+        <input type="file" id="fileResume" accept="application/json" hidden>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PARTS ===== -->
+<section class="screen" id="scrTest">
+  <div class="tabs" id="tabs"></div>
+
+  <!-- PART 1 -->
+  <div class="paper part" id="part1">
+    <div class="part-head"><span class="part-badge">PART 1</span><span class="qrange">Spelling clinic · 1 – 16</span><span class="scorepill" id="pill1"></span></div>
+    <p class="task-intro">You will hear sixteen sentences. Listen to each one and write the missing word. Spelling must be exactly right, just as it is in the real test.</p>
+    <p class="ar">ستستمع إلى ست عشرة جملة. اكتب الكلمة الناقصة في كل جملة. يجب أن يكون التهجئة صحيحة تمامًا كما في الاختبار الحقيقي.</p>
+
+    <div class="teach">
+      <h3>Before you start — what the test makes you spell</h3>
+      <p>In a listening test the marker does not care whether you understood. They care whether the word on the page is spelled correctly. One missing letter and the mark is gone. The same small family of words comes up again and again:</p>
+      <div class="cats">
+        <span class="cat">days &amp; months</span><span class="cat">surnames spelled out</span><span class="cat">prices &amp; numbers</span>
+        <span class="cat">reference codes</span><span class="cat">places on a campus</span><span class="cat">travel &amp; booking words</span>
+      </div>
+      <p style="margin-top:14px">Names and codes are different: nobody expects you to know them, so the speaker spells them out. Your only job is to catch the letters in order. Everything else comes down to six traps:</p>
+      <div class="trapgrid">
+        <div class="trap"><b>Double letters</b><i>acomodation</i><em>accommodation</em></div>
+        <div class="trap"><b>Silent letters</b><i>recipt</i><em>receipt</em></div>
+        <div class="trap"><b>Syllables you never hear</b><i>labratory</i><em>laboratory</em></div>
+        <div class="trap"><b>Endings that sound the same</b><i>insurence</i><em>insurance</em></div>
+        <div class="trap"><b>Vowels in the wrong order</b><i>Teusday</i><em>Tuesday</em></div>
+        <div class="trap"><b>French endings</b><i>brochere</i><em>brochure</em></div>
+      </div>
+    </div>
+
+    <div id="p1"></div>
+    <div class="markbar no-print"><button class="btn sea small" data-mark="1">Mark Part 1</button><span class="out" id="out1"></span></div>
+  </div>
+
+  <!-- PART 2 -->
+  <div class="paper part" id="part2" hidden>
+    <div class="part-head"><span class="part-badge">PART 2</span><span class="qrange">Questions 17 – 24</span><span class="scorepill" id="pill2"></span></div>
+    <p class="task-intro">You will hear a news report about a woman and her loud neighbour. Listen and take notes. You will hear the recording twice.</p>
+    <p class="ar">ستستمع إلى تقرير إخباري عن امرأة وجارها المزعج. استمع ودوّن ملاحظاتك. سيُشغَّل التسجيل مرتين.</p>
+    <div class="reel" data-reel="2"></div>
+    <div id="p2"></div>
+    <div class="markbar no-print"><button class="btn sea small" data-mark="2">Mark Part 2</button><span class="out" id="out2"></span></div>
+  </div>
+
+  <!-- PART 3 -->
+  <div class="paper part" id="part3" hidden>
+    <div class="part-head"><span class="part-badge">PART 3</span><span class="qrange">Questions 25 – 34</span><span class="scorepill" id="pill3"></span></div>
+    <p class="task-intro">You will hear a tourist guide giving information about a trip. Listen and take notes. You will hear the recording twice.</p>
+    <p class="ar">ستستمع إلى مرشد سياحي يقدّم معلومات عن رحلة. استمع ودوّن ملاحظاتك. سيُشغَّل التسجيل مرتين.</p>
+    <div class="reel" data-reel="3"></div>
+    <div id="p3"></div>
+    <div class="markbar no-print"><button class="btn sea small" data-mark="3">Mark Part 3</button><span class="out" id="out3"></span></div>
+    <div class="markbar no-print" style="border:0;padding-top:6px">
+      <button class="btn" id="btnFinish">See my full result</button>
+      <button class="btn alt small" id="btnSaveAttempt">Save my answers to a file</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RESULT ===== -->
+<section class="screen" id="scrResult">
+  <div class="result-hero">
+    <p>Your score</p>
+    <div class="big" id="scoreOut">0/34</div>
+    <p id="scoreNote"></p>
+    <div class="scorebits">
+      <div><b id="pctOut">0%</b>accuracy</div>
+      <div><b id="spellOut">0/16</b>spelling</div>
+      <div><b id="bestOut">—</b>strongest part</div>
+    </div>
+  </div>
+  <div class="secbars">
+    <div class="sb"><span class="lbl">Part 1 — spelling</span><span class="track"><i id="b1"></i></span><span class="val" id="v1">0/16</span></div>
+    <div class="sb"><span class="lbl">Part 2 — news report</span><span class="track"><i id="b2"></i></span><span class="val" id="v2">0/8</span></div>
+    <div class="sb"><span class="lbl">Part 3 — tour guide</span><span class="track"><i id="b3"></i></span><span class="val" id="v3">0/10</span></div>
+    <div class="badges" id="badges"></div>
+    <p id="advice" style="color:var(--ink-soft);font-size:16px;margin:18px 0 0;max-width:68ch"></p>
+    <div class="markbar no-print" style="border:0">
+      <button class="btn" id="btnReview">Go through my answers</button>
+      <button class="btn alt" id="btnSaveResult">Save my result file</button>
+      <button class="btn grey" id="btnRetake">Start again</button>
+    </div>
+  </div>
+  <div class="cert" id="cert">
+    <div class="frame">
+      <h3>Certificate of Achievement</h3>
+      <p class="sub">Listening Practice 3 · Spelling and Note-taking</p>
+      <p class="awarded">This is to certify that</p>
+      <div class="who" id="certName">Student</div>
+      <p class="awarded">completed all three parts and scored</p>
+      <div class="bandbox"><span class="bandlbl">Score</span><span class="bandnum" id="certScore">—</span></div>
+      <p class="cscore"><span id="certPct">0%</span> correct &nbsp;·&nbsp; <span id="certBreak"></span></p>
+      <p class="cmsg" id="certMsg"></p>
+      <div class="sig">
+        <div><span id="certDate"></span><small>Date</small></div>
+        <div><span>Nazila Motahari</span><small>Instructor</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="markbar no-print" style="border:0">
+    <input type="text" id="certNameIn" placeholder="Type your name for the certificate" style="border:1.5px solid var(--rule);border-radius:8px;padding:11px 14px;min-width:250px">
+    <button class="btn alt small" id="btnAddName">Put my name on it</button>
+    <button class="btn alt small" id="btnPrintCert">Print or save the certificate</button>
+  </div>
+</section>
+
+<p class="foot">Designed by: Nazila Motahari</p>
+</div>
+
+<div class="dock" id="dock" hidden>
+  <div class="dock-inner">
+    <div class="marks" id="marks"></div>
+    <button class="btn small alt" id="btnPrev">Back</button>
+    <button class="btn small" id="btnNext">Next part</button>
+  </div>
+</div>
+
+<!-- ===== TEACHER DRAWER ===== -->
+<div class="drawer" id="drawer">
+  <div class="dpanel">
+    <h3>Teacher setup</h3>
+    <p class="hint">Part 1 is marked automatically. Parts 2 and 3 use the key below — most answers are already filled in, but a few need you to confirm them against the recording.</p>
+    <div class="note" id="keyWarn"></div>
+    <div class="dsec"><h4>Part 2 — news report</h4><div id="key2"></div></div>
+    <div class="dsec"><h4>Part 3 — tour guide</h4><div id="key3"></div></div>
+    <div class="dsec">
+      <h4>Save and load</h4>
+      <div class="row">
+        <button class="btn small" id="btnExportCfg">Export settings file</button>
+        <button class="btn small alt" id="btnImportCfg">Import settings file</button>
+        <input type="file" id="fileCfg" accept="application/json" hidden>
+      </div>
+      <div class="row"><button class="btn small grey" id="btnCloseDrawer">Close</button></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+"use strict";
+
+/* ============ Part 1 — spelling items ============ */
+const SPELL = [
+  {n:1,tag:"places on a campus",word:"accommodation",
+   before:"The university can arrange",after:"for all first-year students.",
+   tip:"Two c's and two m's. It is the most commonly misspelled word in the whole exam."},
+  {n:2,tag:"days &amp; months",word:"Wednesday",
+   before:"The library closes early on",after:"afternoons.",
+   tip:"Wed-nes-day. Say the hidden 'd' in your head as you write it."},
+  {n:3,tag:"travel &amp; booking",word:"receipt",
+   before:"Please keep your",after:"as proof of payment.",
+   tip:"Silent p. And it follows the 'i before e except after c' rule."},
+  {n:4,tag:"surname spelled out",word:"Hutchinson",
+   before:"The doctor's name is",after:".",
+   say:"The doctor's name is Hutchinson. That's H, U, T, C, H, I, N, S, O, N.",
+   tip:"When a name is spelled out, write each letter as you hear it. Do not try to guess the name."},
+  {n:5,tag:"places on a campus",word:"laboratory",
+   before:"The computer",after:"is on the second floor.",
+   tip:"La-bo-ra-tory. The middle 'o' disappears when people speak, but it must be written."},
+  {n:6,tag:"days &amp; months",word:"February",
+   before:"The new course begins on the fourteenth of",after:".",
+   tip:"Feb-ru-ary. The first r is almost never pronounced, but it belongs on the page."},
+  {n:7,tag:"prices &amp; numbers",word:"250",alts:"250 / £250 / two hundred and fifty",
+   before:"The deposit for the room is",after:"pounds.",
+   tip:"Write numbers as figures. It is faster, and there is nothing to misspell."},
+  {n:8,tag:"travel &amp; booking",word:"insurance",
+   before:"Travel",after:"costs an extra twenty pounds.",
+   tip:"Ends -ance, not -ence. Think 'insure' plus 'ance'."},
+  {n:9,tag:"surname spelled out",word:"McPherson",alts:"McPherson / MacPherson",
+   before:"The tutor's name is",after:".",
+   say:"The tutor's name is McPherson. That's M, C, P, H, E, R, S, O, N.",
+   tip:"Scottish and Irish names often begin Mc or Mac. Listen for which one, and keep the letters in order."},
+  {n:10,tag:"places on a campus",word:"timetable",
+   before:"You can collect a",after:"from the reception desk.",
+   tip:"One word, not two."},
+  {n:11,tag:"reference code",word:"BQ472",alts:"BQ472 / bq472",
+   before:"Your booking reference is",after:".",
+   say:"Your booking reference is B, Q, four, seven, two.",
+   tip:"Codes mix letters and numbers. Write them in capitals with no spaces."},
+  {n:12,tag:"days &amp; months",word:"Tuesday",
+   before:"The photography group meets every",after:"evening.",
+   tip:"Tues-day. Not Teusday — the u comes before the e."},
+  {n:13,tag:"travel &amp; booking",word:"brochure",
+   before:"The travel",after:"lists every hotel in the area.",
+   tip:"A French spelling: -ch- makes a 'sh' sound, and it ends -ure."},
+  {n:14,tag:"prices &amp; numbers",word:"16.50",alts:"16.50 / £16.50 / 16.5 / £16.5",
+   before:"The two-course lunch costs",after:"pounds.",
+   tip:"Write a price as figures with a decimal point. Sixteen fifty means 16.50."},
+  {n:15,tag:"surname spelled out",word:"Whitfield",
+   before:"The manager's surname is",after:".",
+   say:"The manager's surname is Whitfield. That's W, H, I, T, F, I, E, L, D.",
+   tip:"Two i's, and the silent h after the w. Write the letters, not the sound."},
+  {n:16,tag:"reference code",word:"NE4 7TR",alts:"NE4 7TR / NE47TR / ne4 7tr",
+   before:"The postcode is",after:".",
+   say:"The postcode is N, E, four. Seven, T, R.",
+   tip:"A British postcode is two blocks with a space between them: letters, number, then number, letters."}
+];
+
+/* ============ Parts 2 and 3 ============ */
+const MCQ2 = [
+  [17,"What was the date?",["4 o'clock, Thursday","6 o'clock, Wednesday","4 o'clock, Wednesday"]],
+  [18,"What was the noise?",["A fight between two men","Loud phone calls","Pets in the apartment on the first floor"]],
+  [19,"Until what time did the noise continue?",["Until around 3 a.m.","Until around 5 p.m.","Until around 5 a.m."]],
+  [20,"What did the man tell her?",["He will call the police.","He will not answer the door.","He will hit her."]],
+  [21,"What happened after five months?",["The man moved out of the building.","The woman moved out of the building.","The police removed the man from the building."]],
+  [22,"Which is not a reason for noise?",["Loud music","TV and children","Pets"]],
+  [23,"How many people are unhappy with their neighbours' noise?",["1 in 5","1 in 10","1 in 100"]],
+  [24,"What can be stressful?",["Living in crowded areas","Talking to your neighbours","Working in a big city"]]
+];
+const MCQ3 = [
+  [25,"Where is the town hall?",["In front of the hotel","Behind the hotel","To the left of the hotel"]],
+  [26,"What time will the tourists arrive in Brighton?",["9 a.m.","10 a.m.","11 a.m."]],
+  [27,"In the past, the Royal Pavilion was …",["a royal palace","a museum","a jewellery shop"]],
+  [28,"What does the guide suggest the tourists do at 11:30?",["Walk around the garden","Have a quick drink","Take photos before they leave"]],
+  [29,"Where will they have lunch?",["At Donatello's Restaurant","At the garden cafe","At the royal palace"]],
+  [30,"How much is the two-course menu?",["£6.55","£6.95","£6.65"]],
+  [31,"How much is the three-course menu?",["£8.95","£9.85","£8.59"]],
+  [32,"What will they see in the afternoon?",["Brighton Museum","The Grand Hotel","Orchid Gardens"]],
+  [33,"What time can the tourists explore the seafront?",["From 3 to 5","From 5 to 7","From 4 to 6"]],
+  [34,"What does the guide especially recommend seeing on the seafront?",["The Old Bus Station","The Aquarium","The Tea House"]]
+];
+/* Answers taken from the Test 2 answer key where the same moment is tested.
+   Blank entries are ones the key does not cover — the teacher confirms them. */
+const DEFAULT_KEY = {
+  17:"", 18:"", 19:"", 20:"C", 21:"B", 22:"", 23:"B", 24:"A",
+  25:"", 26:"B", 27:"A", 28:"B", 29:"A", 30:"B", 31:"A", 32:"A", 33:"A", 34:"B"
+};
+const WHY = {
+  20:"He threatens to hit her if she ever comes down again.",
+  21:"Nobody would help her, so in the end she was the one who moved out.",
+  23:"One person in ten said noise had ruined their home life.",
+  24:"Lisa Dorn points to higher population density — a crowded way of living that is stressful.",
+  26:"The itinerary gives arrival in Brighton at 10 a.m.",
+  27:"The guided tour is of the palace — the Pavilion was built as a royal residence.",
+  28:"During the coffee break the guide says you will probably fancy a quick drink.",
+  29:"Lunch is at Donatello Restaurant, from 12.45.",
+  30:"The two-course meal costs £6.95. £8.95 is the three-course price.",
+  31:"The three-course lunch is £8.95.",
+  32:"From 2 to 3 the group visits Brighton Museum and Art Gallery.",
+  33:"Free time on the seafront runs from 3pm to 5pm.",
+  34:"Particularly worth visiting are the Pier, the Aquarium and the artists' studios."
+};
+const RANGE = {1:[1,16],2:[17,24],3:[25,34]};
+const TOT = {1:16,2:8,3:10};
+
+/* ============ state ============ */
+const cfg = { key:Object.assign({},DEFAULT_KEY) };
+const answers = {};
+let current=1, started=false, reviewing=false, result=null;
+const plays={}, speeds={};
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+
+/* ============ speech ============ */
+const SPEECH = {
+  ok:("speechSynthesis" in window), voices:[], playing:null,
+  load(){ if(!this.ok) return; const v=speechSynthesis.getVoices().filter(x=>/^en/i.test(x.lang)); if(v.length) this.voices=v; },
+  pick(){ if(!this.voices.length) return null;
+    const uk=this.voices.filter(v=>/en[-_]GB/i.test(v.lang)); return (uk[0]||this.voices[0]); },
+  speak(text,rate,onEnd){
+    if(!this.ok){ onEnd&&onEnd(); return; }
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    const v=this.pick(); if(v) u.voice=v;
+    u.lang=(v&&v.lang)||"en-GB"; u.rate=rate*0.95;
+    u.onend=()=>onEnd&&onEnd();
+    speechSynthesis.speak(u);
+  },
+  stop(){ if(this.ok) speechSynthesis.cancel(); this.playing=null;
+    $$(".abtn.playing").forEach(b=>{b.classList.remove("playing");b.textContent="▶ Play again";}); }
+};
+SPEECH.load();
+if(SPEECH.ok) speechSynthesis.onvoiceschanged=()=>SPEECH.load();
+
+/* ============ build ============ */
+function sayText(it){ return it.say || (it.before+" "+it.word+" "+it.after).replace(/\s+([.,])/g,"$1"); }
+function buildPart1(){
+  $("#p1").innerHTML = SPELL.map(it=>`
+    <div class="spell" id="sp-${it.n}" data-qrow="${it.n}">
+      <div class="head">
+        <span class="num">${it.n}</span>
+        <span class="tag">${it.tag}</span>
+        <button class="abtn" data-say="${it.n}">▶ Play the sentence</button>
+        <button class="abtn quiet" data-slow="${it.n}">Slower</button>
+        ${SPEECH.ok?"":'<span style="font-size:14px;color:var(--coral)">This browser cannot read aloud — the sentence is shown instead.</span>'}
+      </div>
+      <p class="sentence ${SPEECH.ok?"hidden-sentence":""}">${it.before} <span class="blank">?</span> ${it.after}</p>
+      <div class="typerow">
+        <input type="text" data-q="${it.n}" placeholder="Write the missing word" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="btn sea small" data-check="${it.n}">Check</button>
+      </div>
+      <div class="letters" id="lt-${it.n}"></div>
+      <div class="correctword" id="cw-${it.n}"></div>
+    </div>`).join("");
+}
+function mcq(list,holder){
+  $(holder).innerHTML = list.map(([n,stem,opts])=>`
+    <div class="qblock" data-qrow="${n}">
+      <div class="qstem"><span class="num">${n}</span><span class="txt">${stem}</span></div>
+      <div class="opts">${opts.map((t,i)=>{const l="ABC"[i];
+        return `<button class="opt" data-pick="${n}" data-letter="${l}"><span class="lt">${l}</span><span>${t}</span></button>`;}).join("")}</div>
+      <div class="nokey" id="nk-${n}">Your teacher has not confirmed the answer to this question yet, so it is not marked.</div>
+      <div class="why" id="why-${n}"></div>
+    </div>`).join("");
+}
+
+/* ============ interaction ============ */
+document.addEventListener("click",e=>{
+  const say=e.target.closest("[data-say]");
+  if(say){
+    const n=+say.dataset.say, it=SPELL.find(x=>x.n===n);
+    if(SPEECH.playing===n){ SPEECH.stop(); return; }
+    SPEECH.stop(); SPEECH.playing=n;
+    say.classList.add("playing"); say.textContent="■ Stop";
+    plays[n]=(plays[n]||0)+1;
+    SPEECH.speak(sayText(it), speeds[n]||1, ()=>{
+      say.classList.remove("playing"); say.textContent="▶ Play again"; SPEECH.playing=null;
+    });
+    return;
+  }
+  const slow=e.target.closest("[data-slow]");
+  if(slow){
+    const n=+slow.dataset.slow;
+    speeds[n]=(speeds[n]||1)===1?0.7:1;
+    slow.textContent=speeds[n]===1?"Slower":"Normal speed";
+    slow.classList.toggle("quiet",speeds[n]===1);
+    return;
+  }
+  const chk=e.target.closest("[data-check]");
+  if(chk && !reviewing){ checkSpell(+chk.dataset.check); return; }
+  const pick=e.target.closest("[data-pick]");
+  if(pick && !reviewing){
+    const n=pick.dataset.pick; answers[n]=pick.dataset.letter;
+    $$(`[data-pick="${n}"]`).forEach(x=>x.classList.toggle("sel",x.dataset.letter===pick.dataset.letter));
+    refresh(); return;
+  }
+  const mk=e.target.closest("[data-mark]");
+  if(mk) markPart(+mk.dataset.mark);
+});
+function bindInputs(){
+  $$("[data-q]").forEach(el=>{
+    el.addEventListener("input",()=>{ if(reviewing) return; answers[el.dataset.q]=el.value; refresh(); });
+    el.addEventListener("keydown",ev=>{
+      if(ev.key==="Enter"){ const b=document.querySelector(`[data-check="${el.dataset.q}"]`); if(b&&!b.disabled) b.click(); }
+    });
+  });
+}
+
+/* ============ marking ============ */
+function norm(s){return String(s||"").toLowerCase().replace(/[.,;:!?"'()£]/g,"").replace(/\s+/g," ").trim();}
+function spellOk(given,it){
+  const keys=(it.alts||it.word).split("/").map(x=>norm(x)).filter(Boolean);
+  return keys.includes(norm(given));
+}
+function letterFeedback(given,word){
+  const g=String(given||""), w=word, out=[];
+  const n=Math.max(g.length,w.length);
+  for(let i=0;i<n;i++){
+    const a=g[i], b=w[i];
+    if(a===undefined) out.push(`<span class="m">${b}</span>`);
+    else if(b===undefined) out.push(`<span class="b">${a}</span>`);
+    else if(a.toLowerCase()===b.toLowerCase()) out.push(`<span class="g">${b}</span>`);
+    else out.push(`<span class="b">${a}</span>`);
+  }
+  return out.join("");
+}
+function checkSpell(n){
+  const it=SPELL.find(x=>x.n===n);
+  const el=document.querySelector(`[data-q="${n}"]`);
+  const ok=spellOk(el.value,it);
+  answers[n]=el.value;
+  el.disabled=true; document.querySelector(`[data-check="${n}"]`).disabled=true;
+  const card=$("#sp-"+n); card.classList.add(ok?"right":"wrong","revealed");
+  if(!ok){
+    $("#lt-"+n).innerHTML=letterFeedback(el.value,it.word);
+    $("#cw-"+n).innerHTML=`<b>${it.word}</b> — ${it.tip}`;
+  } else {
+    $("#cw-"+n).innerHTML=`<b>${it.word}</b> — correct. ${it.tip}`;
+  }
+  refresh();
+}
+function gradePart(p){
+  const [from,to]=RANGE[p]; const marks={}; let correct=0, graded=0;
+  for(let q=from;q<=to;q++){
+    if(p===1){
+      const it=SPELL.find(x=>x.n===q);
+      graded++;
+      const ok=spellOk(answers[q]||"",it);
+      marks[q]=ok?"ok":"no"; if(ok) correct++;
+    } else {
+      const k=(cfg.key[q]||"").trim().toUpperCase();
+      if(!k){ marks[q]="na"; continue; }
+      graded++;
+      const ok=(answers[q]||"")===k;
+      marks[q]=ok?"ok":"no"; if(ok) correct++;
+    }
+  }
+  return {correct,graded,total:to-from+1,marks};
+}
+function paint(marks){
+  Object.keys(marks).forEach(q=>{
+    const st=marks[q];
+    if(st==="na"){ const nk=$("#nk-"+q); if(nk) nk.classList.add("on"); return; }
+    const key=(cfg.key[q]||"").trim().toUpperCase();
+    $$(`[data-pick="${q}"]`).forEach(x=>{
+      x.disabled=true;
+      if(x.dataset.letter===key) x.classList.add("ok");
+      else if(answers[q]===x.dataset.letter) x.classList.add("no");
+    });
+    const w=$("#why-"+q);
+    if(w && WHY[q] && key){ w.innerHTML="<b>Answer "+key+".</b> "+WHY[q]; w.classList.add("on"); }
+    const el=document.querySelector(`[data-q="${q}"]`);
+    if(el && !el.disabled) checkSpell(+q);
+    const mk=document.querySelector(`[data-go="${q}"]`);
+    if(mk){ mk.classList.remove("filled"); mk.classList.add(st); }
+  });
+}
+function markPart(p){
+  const r=gradePart(p);
+  paint(r.marks);
+  const extra = r.graded<r.total ? " ("+(r.total-r.graded)+" not marked yet)" : "";
+  $("#out"+p).innerHTML="Part "+p+": <b>"+r.correct+"</b> out of "+r.graded+extra+".";
+  const pill=$("#pill"+p); pill.textContent=r.correct+"/"+r.graded; pill.classList.add("on");
+  document.querySelector(`[data-mark="${p}"]`).disabled=true;
+  refresh();
+}
+function finish(){
+  const per={}, all={}; let correct=0, graded=0;
+  for(let p=1;p<=3;p++){
+    const r=gradePart(p); per[p]=r.correct; correct+=r.correct; graded+=r.graded;
+    Object.assign(all,r.marks);
+    const pill=$("#pill"+p); pill.textContent=r.correct+"/"+r.graded; pill.classList.add("on");
+  }
+  result={per,correct,graded,marks:all};
+  paint(all);
+  const pct=graded?Math.round(correct/graded*100):0;
+  $("#scoreOut").textContent=correct+"/"+graded;
+  $("#pctOut").textContent=pct+"%";
+  $("#spellOut").textContent=per[1]+"/16";
+  const best=[1,2,3].sort((a,b)=>(per[b]/TOT[b])-(per[a]/TOT[a]))[0];
+  $("#bestOut").textContent="Part "+best;
+  $("#scoreNote").textContent = graded<34
+    ? "Marked on the "+graded+" questions that have a confirmed answer."
+    : "Marked on all 34 questions.";
+  for(let p=1;p<=3;p++){ $("#b"+p).style.width=(per[p]/TOT[p]*100)+"%"; $("#v"+p).textContent=per[p]+"/"+TOT[p]; }
+  const b=[];
+  if(per[1]>=14) b.push("✍️ Spelling secure");
+  if(per[1]===16) b.push("💯 All sixteen words right");
+  if(per[2]>=6) b.push("📻 News report secure");
+  if(per[3]>=8) b.push("🧳 Tour guide secure");
+  if(pct>=80) b.push("🏆 80% or better");
+  $("#badges").innerHTML=b.map(x=>`<span class="badge">${x}</span>`).join("");
+  const weak=[1,2,3].sort((a,b2)=>(per[a]/TOT[a])-(per[b2]/TOT[b2]))[0];
+  const tips={
+    1:"Spelling is the cheapest mark in the whole exam, because it needs no understanding at all — only practice. Go back through the words you missed, write each one three times, and repeat Part 1 tomorrow.",
+    2:"In a news report the speaker gives numbers, times and reasons quickly and only once. Write the figure down the moment you hear it, even if you are not sure yet which question it belongs to.",
+    3:"With an itinerary, the order on the page matches the order of the recording. Keep your finger on the line you are listening for, and note prices and place names exactly as you hear them."
+  };
+  $("#advice").textContent = pct>=85
+    ? "Strong across all three parts. Keep the habit of writing while you listen rather than afterwards."
+    : tips[weak];
+  const nm=($("#studentName").value.trim()||"Student");
+  $("#certName").textContent=nm; $("#certNameIn").value=$("#studentName").value.trim()||"";
+  $("#certScore").textContent=correct+"/"+graded; $("#certPct").textContent=pct+"%";
+  $("#certBreak").textContent="Parts: "+[1,2,3].map(p=>per[p]).join(" · ");
+  $("#certMsg").textContent = pct>=85 ? "An excellent result across spelling and note-taking."
+    : pct>=70 ? "A solid result. The spelling practice in Part 1 is what carries this forward."
+    : "All three parts completed. The review notes below are where the next marks come from.";
+  $("#certDate").textContent=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  SPEECH.stop();
+  show("scrResult"); $("#dock").hidden=true; $("#chipProgress").hidden=true;
+  if(pct>=70) confetti();
+}
+$("#btnFinish").onclick=finish;
+$("#btnReview").onclick=()=>{
+  reviewing=true; show("scrTest"); $("#dock").hidden=false; showPart(1);
+  $$("[data-mark]").forEach(b=>b.disabled=true);
+  $("#btnFinish").textContent="Back to my result";
+  $("#btnFinish").onclick=()=>{show("scrResult");$("#dock").hidden=true;};
+  $("#btnSaveAttempt").hidden=true;
+};
+
+/* ============ audio ============ */
+function renderReels(){
+  $$("[data-reel]").forEach(el=>{
+    const n=+el.dataset.reel;
+    const paths=["audio/part"+n+".mp3","part"+n+".mp3"];
+    el.innerHTML=`<div class="reel-label"><b>Recording — Part ${n}</b>You will hear it twice. The pause and the second playing are inside the track.</div>
+      <audio controls preload="metadata" src="${paths[0]}"></audio>
+      <p class="warn">Recording ${n} could not be found. It should be at <b>audio/part${n}.mp3</b> or <b>part${n}.mp3</b>, in the same place as this page.</p>`;
+    const a=el.querySelector("audio"); let i=0, wanted=false;
+    a.addEventListener("play",()=>{wanted=true;SPEECH.stop();});
+    a.addEventListener("error",()=>{
+      i++;
+      if(i<paths.length){ a.src=paths[i]; a.load(); if(wanted) a.play().catch(()=>{}); }
+      else el.classList.add("broken");
+    });
+  });
+}
+
+/* ============ teacher panel ============ */
+function keyRows(list,holder){
+  $(holder).innerHTML = list.map(([n,stem])=>`
+    <div class="keyrow${(cfg.key[n]||"").trim()?"":" needs"}">
+      <label>${n}</label><span class="stem">${stem}</span>
+      <select data-key="${n}">
+        <option value=""${cfg.key[n]?"":" selected"}>— not set —</option>
+        ${["A","B","C"].map(l=>`<option value="${l}"${cfg.key[n]===l?" selected":""}>${l}</option>`).join("")}
+      </select></div>`).join("");
+}
+function renderKey(){
+  keyRows(MCQ2,"#key2"); keyRows(MCQ3,"#key3");
+  $$("[data-key]").forEach(s=>s.addEventListener("change",()=>{
+    cfg.key[s.dataset.key]=s.value;
+    s.closest(".keyrow").classList.toggle("needs",!s.value);
+    updateWarn();
+  }));
+  updateWarn();
+}
+function updateWarn(){
+  const missing=[];
+  for(let q=17;q<=34;q++) if(!(cfg.key[q]||"").trim()) missing.push(q);
+  const w=$("#keyWarn");
+  if(!missing.length){ w.innerHTML="All eighteen answers are set. Everything will be marked."; }
+  else w.innerHTML="<b>Questions "+missing.join(", ")+"</b> are not set yet. These moments are not covered by the printed answer key, so listen once and choose the letter below. Until then those questions are skipped when marking.";
+}
+$("#btnSetup").onclick=()=>{$("#drawer").classList.add("on");renderKey();};
+$("#btnCloseDrawer").onclick=()=>$("#drawer").classList.remove("on");
+$("#drawer").addEventListener("click",e=>{if(e.target.id==="drawer")$("#drawer").classList.remove("on");});
+
+/* ============ nav ============ */
+function answeredCount(){let n=0;for(let q=1;q<=34;q++) if((answers[q]||"").trim()) n++;return n;}
+function partOf(q){ return [1,2,3].find(p=>q>=RANGE[p][0]&&q<=RANGE[p][1]); }
+function buildPalette(){
+  let h="";
+  for(let p=1;p<=3;p++){
+    h+=`<div class="mgroup"><span>P${p}</span>`;
+    for(let q=RANGE[p][0];q<=RANGE[p][1];q++) h+=`<button class="mk" data-go="${q}">${q}</button>`;
+    h+=`</div>`;
+  }
+  $("#marks").innerHTML=h;
+  $$("[data-go]").forEach(b=>b.onclick=()=>{
+    const q=+b.dataset.go; showPart(partOf(q));
+    const t=document.querySelector(`[data-qrow="${q}"]`);
+    if(t) t.scrollIntoView({block:"center",behavior:"smooth"});
+  });
+}
+function refresh(){
+  $("#ansCount").textContent=answeredCount();
+  $$("[data-go]").forEach(b=>{
+    const q=+b.dataset.go;
+    if(!b.classList.contains("ok")&&!b.classList.contains("no"))
+      b.classList.toggle("filled",!!(answers[q]||"").trim());
+    b.classList.toggle("here",partOf(q)===current);
+  });
+  $$(".tab").forEach(t=>{
+    const p=+t.dataset.tab; let done=true;
+    for(let q=RANGE[p][0];q<=RANGE[p][1];q++) if(!(answers[q]||"").trim()) done=false;
+    t.classList.toggle("done",done);
+  });
+}
+function buildTabs(){
+  const names={1:"Part 1 · Spelling",2:"Part 2 · News report",3:"Part 3 · Tour guide"};
+  $("#tabs").innerHTML=[1,2,3].map(p=>`<button class="tab${p===1?" on":""}" data-tab="${p}"><span class="dot"></span>${names[p]}</button>`).join("");
+  $$(".tab").forEach(t=>t.onclick=()=>showPart(+t.dataset.tab));
+}
+function showPart(p){
+  current=p; SPEECH.stop();
+  $$(".part").forEach((el,i)=>el.hidden=(i+1!==p));
+  $$(".tab").forEach(t=>t.classList.toggle("on",+t.dataset.tab===p));
+  $("#btnPrev").disabled=p===1; $("#btnNext").disabled=p===3;
+  $("#btnNext").textContent=p===3?"Last part":"Next part";
+  document.querySelectorAll("audio").forEach(a=>{if(!a.paused)a.pause();});
+  window.scrollTo({top:0,behavior:"smooth"});
+  refresh();
+}
+$("#btnPrev").onclick=()=>showPart(Math.max(1,current-1));
+$("#btnNext").onclick=()=>showPart(Math.min(3,current+1));
+
+/* ============ save / load ============ */
+function download(name,obj){
+  const b=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function slug(){return ($("#studentName").value.trim()||"student").replace(/\s+/g,"-").toLowerCase();}
+$("#btnSaveAttempt").onclick=()=>download("listening-practice-3-"+slug()+".json",
+  {type:"lp3-attempt",version:1,name:$("#studentName").value.trim(),answers});
+$("#btnSaveResult").onclick=()=>download("listening-practice-3-result-"+slug()+".json",
+  {type:"lp3-result",version:1,name:$("#studentName").value.trim(),
+   score:result.correct,graded:result.graded,perPart:result.per,answers,date:new Date().toISOString()});
+$("#btnResume").onclick=()=>$("#fileResume").click();
+$("#fileResume").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const d=JSON.parse(r.result);
+    Object.assign(answers,d.answers||{});
+    if(d.name)$("#studentName").value=d.name;
+    start();
+    $$("[data-q]").forEach(el=>{const v=answers[el.dataset.q];if(v)el.value=v;});
+    $$("[data-pick]").forEach(x=>{if(answers[x.dataset.pick]===x.dataset.letter)x.classList.add("sel");});
+    refresh();
+  }catch(err){alert("That file could not be read. Choose an answers file saved from this practice.");}};
+  r.readAsText(f); e.target.value="";
+};
+$("#btnExportCfg").onclick=()=>download("listening-practice-3-settings.json",{type:"lp3-config",version:1,key:cfg.key});
+$("#btnImportCfg").onclick=()=>$("#fileCfg").click();
+$("#fileCfg").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const d=JSON.parse(r.result);
+    Object.assign(cfg.key,d.key||{});
+    renderKey(); alert("Answer key loaded.");
+  }catch(err){alert("That file could not be read. Choose a settings file exported from this practice.");}};
+  r.readAsText(f); e.target.value="";
+};
+
+/* ============ certificate ============ */
+$("#btnAddName").onclick=()=>{
+  const v=$("#certNameIn").value.trim(); if(!v){$("#certNameIn").focus();return;}
+  $("#studentName").value=v; $("#certName").textContent=v;
+};
+$("#certNameIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("#btnAddName").click();});
+$("#btnPrintCert").onclick=()=>{
+  if(!$("#studentName").value.trim()&&$("#certNameIn").value.trim())$("#btnAddName").click();
+  document.body.classList.add("cert-only"); window.print();
+  setTimeout(()=>document.body.classList.remove("cert-only"),600);
+};
+
+/* ============ screens ============ */
+function show(id){$$(".screen").forEach(s=>s.classList.toggle("on",s.id===id));}
+function start(){
+  started=true; show("scrTest"); $("#dock").hidden=false; $("#chipProgress").hidden=false;
+  buildTabs(); buildPalette(); showPart(1); refresh();
+}
+$("#btnStart").onclick=start;
+$("#btnRetake").onclick=()=>location.reload();
+$("#btnAr").onclick=()=>document.body.classList.toggle("show-ar");
+
+/* ============ confetti ============ */
+function confetti(){
+  const c=$("#confetti"),x=c.getContext("2d");
+  c.style.display="block";c.width=innerWidth;c.height=innerHeight;
+  const cols=["#6b2f5e","#14786b","#a9761a","#2b1f33","#c07aad"];
+  const bits=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.6,
+    w:6+Math.random()*7,h:9+Math.random()*9,vy:2+Math.random()*3.2,vx:-1+Math.random()*2,
+    r:Math.random()*6,vr:-.15+Math.random()*.3,col:cols[(Math.random()*cols.length)|0]}));
+  let f=0;(function loop(){
+    x.clearRect(0,0,c.width,c.height);f++;
+    bits.forEach(b=>{b.y+=b.vy;b.x+=b.vx;b.r+=b.vr;
+      x.save();x.translate(b.x,b.y);x.rotate(b.r);x.fillStyle=b.col;x.fillRect(-b.w/2,-b.h/2,b.w,b.h);x.restore();});
+    if(f<300)requestAnimationFrame(loop);else{c.style.display="none";x.clearRect(0,0,c.width,c.height);}
+  })();
+}
+
+/* ============ init ============ */
+buildPart1(); mcq(MCQ2,"#p2"); mcq(MCQ3,"#p3"); bindInputs(); renderReels(); renderKey();
+window.addEventListener("beforeunload",e=>{if(started&&!result){e.preventDefault();e.returnValue="";}});
+</script>
+</body>
+</html>
